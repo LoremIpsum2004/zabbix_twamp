@@ -1,0 +1,361 @@
+zabbix_export:
+  version: '7.2'
+  template_groups:
+    - uuid: cc6f7003b6fb4343ad9a07469f8dddc7
+      name: twampy_sfp
+  templates:
+    - uuid: 0fb90f2f7df7454ea064cf4eef40ccf3
+      template: twampy_sfp
+      name: twampy_sfp
+      groups:
+        - name: twampy_sfp
+      items:
+        - uuid: cc238f7bf6fa4eae9b41d8fcf37eff58
+          name: 'Ping check'
+          type: SIMPLE
+          key: icmpping
+          tags:
+            - tag: Type
+              value: ICMP
+          triggers:
+            - uuid: df57a726b05d4cf286ea61125ac605a2
+              expression: 'max(/twampy_sfp/icmpping,#3)=0'
+              name: 'Unavailable by ICMP ping'
+              priority: HIGH
+              description: 'Last three attempts returned timeout.  Please check device connectivity.'
+        - uuid: 14cd736e408f450da4800ed3cbf8635c
+          name: 'ICMP response time'
+          type: SIMPLE
+          key: icmppingsec
+          value_type: FLOAT
+          units: s
+          tags:
+            - tag: Type
+              value: ICMP
+          triggers:
+            - uuid: eb1c1370b94e4b2784b29a7cd7cd47c4
+              expression: 'avg(/twampy_sfp/icmppingsec,5m)>{$ICMP_RESPONSE_TIME_WARN}'
+              name: 'High ICMP ping response time'
+              priority: WARNING
+              description: 'Average ICMP response time is too high.'
+      discovery_rules:
+        - uuid: d6749bbd375143eaaee6bd8ba8ddf804
+          name: 'TWAMP discovery'
+          type: TRAP
+          key: session.discovery
+          lifetime: 1d
+          item_prototypes:
+            - uuid: a50b022efa604e40816fc97870feb40e
+              name: 'Inbound average [{#SESSIONID}]'
+              type: TRAP
+              key: 'in.avg[{#SESSIONID}]'
+              value_type: FLOAT
+              units: ms
+              tags:
+                - tag: 'R ip'
+                  value: '{#IPRESPONDER}'
+                - tag: 'R port'
+                  value: '{#PORTRESPONDER}'
+                - tag: Session
+                  value: '{#SESSIONID}'
+                - tag: 'S ip'
+                  value: '{#IPSENDER}'
+                - tag: 'S port'
+                  value: '{#PORTSENDER}'
+                - tag: Type
+                  value: Metric
+            - uuid: ac671acfa4b646a58616a779f941dc4f
+              name: 'Inbound jitter [{#SESSIONID}]'
+              type: TRAP
+              key: 'in.jit[{#SESSIONID}]'
+              value_type: FLOAT
+              units: ms
+              tags:
+                - tag: 'R ip'
+                  value: '{#IPRESPONDER}'
+                - tag: 'R port'
+                  value: '{#PORTRESPONDER}'
+                - tag: Session
+                  value: '{#SESSIONID}'
+                - tag: 'S ip'
+                  value: '{#IPSENDER}'
+                - tag: 'S port'
+                  value: '{#PORTSENDER}'
+                - tag: Type
+                  value: Metric
+            - uuid: 8a476ef3163443ba90dc65d9fbb798b7
+              name: 'Inbound loss [{#SESSIONID}]'
+              type: TRAP
+              key: 'in.los[{#SESSIONID}]'
+              value_type: FLOAT
+              units: '%'
+              tags:
+                - tag: 'R ip'
+                  value: '{#IPRESPONDER}'
+                - tag: 'R port'
+                  value: '{#PORTRESPONDER}'
+                - tag: Session
+                  value: '{#SESSIONID}'
+                - tag: 'S ip'
+                  value: '{#IPSENDER}'
+                - tag: 'S port'
+                  value: '{#PORTSENDER}'
+                - tag: Type
+                  value: Metric
+            - uuid: 5117723b83f64cddb4378eac6ef1385d
+              name: 'Inbound maximum [{#SESSIONID}]'
+              type: TRAP
+              key: 'in.max[{#SESSIONID}]'
+              value_type: FLOAT
+              units: ms
+              tags:
+                - tag: 'R ip'
+                  value: '{#IPRESPONDER}'
+                - tag: 'R port'
+                  value: '{#PORTRESPONDER}'
+                - tag: Session
+                  value: '{#SESSIONID}'
+                - tag: 'S ip'
+                  value: '{#IPSENDER}'
+                - tag: 'S port'
+                  value: '{#PORTSENDER}'
+                - tag: Type
+                  value: Metric
+            - uuid: 75e8a763dd024762bf5dc76eaf87f37b
+              name: 'Inbound minimum [{#SESSIONID}]'
+              type: TRAP
+              key: 'in.min[{#SESSIONID}]'
+              value_type: FLOAT
+              units: ms
+              tags:
+                - tag: 'R ip'
+                  value: '{#IPRESPONDER}'
+                - tag: 'R port'
+                  value: '{#PORTRESPONDER}'
+                - tag: Session
+                  value: '{#SESSIONID}'
+                - tag: 'S ip'
+                  value: '{#IPSENDER}'
+                - tag: 'S port'
+                  value: '{#PORTSENDER}'
+                - tag: Type
+                  value: Metric
+            - uuid: 46c7346c920241968e86b9e8a0917ff1
+              name: 'Outbound average [{#SESSIONID}]'
+              type: TRAP
+              key: 'out.avg[{#SESSIONID}]'
+              value_type: FLOAT
+              units: ms
+              tags:
+                - tag: 'R ip'
+                  value: '{#IPRESPONDER}'
+                - tag: 'R port'
+                  value: '{#PORTRESPONDER}'
+                - tag: Session
+                  value: '{#SESSIONID}'
+                - tag: 'S ip'
+                  value: '{#IPSENDER}'
+                - tag: 'S port'
+                  value: '{#PORTSENDER}'
+                - tag: Type
+                  value: Metric
+            - uuid: 01e1412a65f646b69dba54cc6d8baf8b
+              name: 'Outbound  jitter [{#SESSIONID}]'
+              type: TRAP
+              key: 'out.jit[{#SESSIONID}]'
+              value_type: FLOAT
+              units: ms
+              tags:
+                - tag: 'R ip'
+                  value: '{#IPRESPONDER}'
+                - tag: 'R port'
+                  value: '{#PORTRESPONDER}'
+                - tag: Session
+                  value: '{#SESSIONID}'
+                - tag: 'S ip'
+                  value: '{#IPSENDER}'
+                - tag: 'S port'
+                  value: '{#PORTSENDER}'
+                - tag: Type
+                  value: Metric
+            - uuid: 507fbd8a31904a7d8a4aaa5bb0383c9f
+              name: 'Outbound loss [{#SESSIONID}]'
+              type: TRAP
+              key: 'out.los[{#SESSIONID}]'
+              value_type: FLOAT
+              units: '%'
+              tags:
+                - tag: 'R ip'
+                  value: '{#IPRESPONDER}'
+                - tag: 'R port'
+                  value: '{#PORTRESPONDER}'
+                - tag: Session
+                  value: '{#SESSIONID}'
+                - tag: 'S ip'
+                  value: '{#IPSENDER}'
+                - tag: 'S port'
+                  value: '{#PORTSENDER}'
+                - tag: Type
+                  value: Metric
+            - uuid: 2dce3d46c3234c1ab2bc2f0b471b94d9
+              name: 'Outbound maximum [{#SESSIONID}]'
+              type: TRAP
+              key: 'out.max[{#SESSIONID}]'
+              value_type: FLOAT
+              units: ms
+              tags:
+                - tag: 'R ip'
+                  value: '{#IPRESPONDER}'
+                - tag: 'R port'
+                  value: '{#PORTRESPONDER}'
+                - tag: Session
+                  value: '{#SESSIONID}'
+                - tag: 'S ip'
+                  value: '{#IPSENDER}'
+                - tag: 'S port'
+                  value: '{#PORTSENDER}'
+                - tag: Type
+                  value: Metric
+            - uuid: 715a9a47cce24f5490e028de8f727742
+              name: 'Outbound minimum [{#SESSIONID}]'
+              type: TRAP
+              key: 'out.min[{#SESSIONID}]'
+              value_type: FLOAT
+              units: ms
+              tags:
+                - tag: 'R ip'
+                  value: '{#IPRESPONDER}'
+                - tag: 'R port'
+                  value: '{#PORTRESPONDER}'
+                - tag: Session
+                  value: '{#SESSIONID}'
+                - tag: 'S ip'
+                  value: '{#IPSENDER}'
+                - tag: 'S port'
+                  value: '{#PORTSENDER}'
+                - tag: Type
+                  value: Metric
+            - uuid: b25d2af9031a4680862a9e6a880a2bd3
+              name: 'Roundtrip average [{#SESSIONID}]'
+              type: TRAP
+              key: 'rt.avg[{#SESSIONID}]'
+              value_type: FLOAT
+              units: ms
+              tags:
+                - tag: 'R ip'
+                  value: '{#IPRESPONDER}'
+                - tag: 'R port'
+                  value: '{#PORTRESPONDER}'
+                - tag: Session
+                  value: '{#SESSIONID}'
+                - tag: 'S ip'
+                  value: '{#IPSENDER}'
+                - tag: 'S port'
+                  value: '{#PORTSENDER}'
+                - tag: Type
+                  value: Metric
+              trigger_prototypes:
+                - uuid: cf5a4e7c5c3143b8911d130760a336e3
+                  expression: 'avg(/twampy_sfp/rt.avg[{#SESSIONID}],3) > {$RT.LATENCY.WARN}'
+                  name: 'Roundtrip latency trigger'
+                  priority: WARNING
+                  description: 'Roundtrip latency is too high'
+            - uuid: fce98eed2471404da4352ebab0ac9a3f
+              name: 'Roundtrip jitter [{#SESSIONID}]'
+              type: TRAP
+              key: 'rt.jit[{#SESSIONID}]'
+              value_type: FLOAT
+              units: ms
+              tags:
+                - tag: 'R ip'
+                  value: '{#IPRESPONDER}'
+                - tag: 'R port'
+                  value: '{#PORTRESPONDER}'
+                - tag: Session
+                  value: '{#SESSIONID}'
+                - tag: 'S ip'
+                  value: '{#IPSENDER}'
+                - tag: 'S port'
+                  value: '{#PORTSENDER}'
+                - tag: Type
+                  value: Metric
+              trigger_prototypes:
+                - uuid: 8313d6dc29e7402c90db0481f9e05bee
+                  expression: 'avg(/twampy_sfp/rt.jit[{#SESSIONID}],3) > {$RT.JITTER.WARN}'
+                  name: 'Roundtrip jitter trigger'
+                  priority: WARNING
+                  description: 'Roundtrip jitter is too high'
+            - uuid: e95dcfd585d84c50a6aaea9a83dc2c97
+              name: 'Roundtrip loss [{#SESSIONID}]'
+              type: TRAP
+              key: 'rt.los[{#SESSIONID}]'
+              value_type: FLOAT
+              units: '%'
+              tags:
+                - tag: 'R ip'
+                  value: '{#IPRESPONDER}'
+                - tag: 'R port'
+                  value: '{#PORTRESPONDER}'
+                - tag: Session
+                  value: '{#SESSIONID}'
+                - tag: 'S ip'
+                  value: '{#IPSENDER}'
+                - tag: 'S port'
+                  value: '{#PORTSENDER}'
+                - tag: Type
+                  value: Metric
+            - uuid: 1753b90c0ea84d779441359ba1613dc8
+              name: 'Roundtrip maximum [{#SESSIONID}]'
+              type: TRAP
+              key: 'rt.max[{#SESSIONID}]'
+              value_type: FLOAT
+              units: ms
+              tags:
+                - tag: 'R ip'
+                  value: '{#IPRESPONDER}'
+                - tag: 'R port'
+                  value: '{#PORTRESPONDER}'
+                - tag: Session
+                  value: '{#SESSIONID}'
+                - tag: 'S ip'
+                  value: '{#IPSENDER}'
+                - tag: 'S port'
+                  value: '{#PORTSENDER}'
+                - tag: Type
+                  value: Metric
+            - uuid: f71e77695d354a24b6a13caa23b9310b
+              name: 'Roundtrip minimum [{#SESSIONID}]'
+              type: TRAP
+              key: 'rt.min[{#SESSIONID}]'
+              value_type: FLOAT
+              units: ms
+              tags:
+                - tag: 'R ip'
+                  value: '{#IPRESPONDER}'
+                - tag: 'R port'
+                  value: '{#PORTRESPONDER}'
+                - tag: Session
+                  value: '{#SESSIONID}'
+                - tag: 'S ip'
+                  value: '{#IPSENDER}'
+                - tag: 'S port'
+                  value: '{#PORTSENDER}'
+                - tag: Type
+                  value: Metric
+            - uuid: 5cf2883b54584217aace2935d6a8feb9
+              name: 'TWAMP status [{#SESSIONID}]'
+              type: TRAP
+              key: 'twamp.status[{#SESSIONID}]'
+              tags:
+                - tag: 'R ip'
+                  value: '{#IPRESPONDER}'
+                - tag: 'R port'
+                  value: '{#PORTRESPONDER}'
+                - tag: Session
+                  value: '{#SESSIONID}'
+                - tag: 'S ip'
+                  value: '{#IPSENDER}'
+                - tag: 'S port'
+                  value: '{#PORTSENDER}'
+                - tag: Type
+                  value: Status
